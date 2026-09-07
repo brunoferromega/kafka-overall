@@ -11,7 +11,7 @@ static final String KAFKA_LOCAL = "127.0.0.1:9092";
 static final String STRING_SERIALIZER = StringSerializer.class.getName();
 
 void main() {
-    log.info("Hello Kafka!");
+    log.info("--Hello Kafka!--");
 
     final var properties = new Properties();
     properties.setProperty(BOOTSTRAP_SERVER, KAFKA_LOCAL);
@@ -23,5 +23,5 @@ void main() {
         producer.send(producerRecord);
     }
 
-    log.info("Everything done!");
+    log.info("--Everything done!--");
 }

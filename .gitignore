@@ -6,10 +6,13 @@ build/
 .kotlin
 
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/vcs.xml
+.idea/gradle.xml
 *.iws
 *.iml
 *.ipr
