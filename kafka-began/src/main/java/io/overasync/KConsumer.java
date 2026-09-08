@@ -1,13 +1,14 @@
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.CooperativeStickyAssignor;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
+
 static final Class<?> currentClass = MethodHandles.lookup().lookupClass();
 static final Logger log = LoggerFactory.getLogger(currentClass.getSimpleName());
-static final String BOOTSTRAP_SERVER = "bootstrap.servers";
 static final String KAFKA_LOCAL = "127.0.0.1:9092";
 static final String STRING_DESERIALIZER = StringDeserializer.class.getName();
 static final String TOPIC = "demo_jkafka";
@@ -15,12 +16,13 @@ static final String GROUP_ID = "the-jc-app";
 
 static Properties getProperties() {
     final var properties = new Properties();
-    properties.setProperty(BOOTSTRAP_SERVER, KAFKA_LOCAL);
-    properties.setProperty("key.deserializer", STRING_DESERIALIZER);
-    properties.setProperty("value.deserializer", STRING_DESERIALIZER);
-    properties.setProperty("group.id", GROUP_ID);
-    properties.setProperty("auto.offset.reset", "earliest");
-    properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+    properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, KAFKA_LOCAL);
+    properties.setProperty(KEY_DESERIALIZER_CLASS_CONFIG, STRING_DESERIALIZER);
+    properties.setProperty(VALUE_DESERIALIZER_CLASS_CONFIG, STRING_DESERIALIZER);
+    properties.setProperty(GROUP_ID_CONFIG, GROUP_ID);
+    properties.setProperty(AUTO_OFFSET_RESET_CONFIG, "earliest");
+//    properties.setProperty(ENABLE_AUTO_COMMIT_CONFIG, "false");
+    properties.setProperty(PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
     return properties;
 }
 
@@ -45,7 +47,7 @@ void main() {
 
         try {
             while (true) {
-                log.info("Polling records...");
+                // log.info("Polling records...");
                 final var consumerRecords = consumer.poll(Duration.ofSeconds(1));
                 consumerRecords.forEach(r -> {
                     log.info("""
